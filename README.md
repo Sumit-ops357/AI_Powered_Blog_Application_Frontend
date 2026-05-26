@@ -103,17 +103,19 @@ Authentication uses a JWT returned by the backend. The session is stored in `loc
 Authorization: Bearer <token>
 ```
 
-The frontend reads the backend origin from:
+Local development uses this backend origin for the Vite dev-server proxy:
 
 ```text
 VITE_API_BASE_URL
 ```
 
-For local development, create a `.env` file:
+Create a `.env` file:
 
 ```text
 VITE_API_BASE_URL=https://ai-powered-blog-application-backend-1.onrender.com
 ```
+
+The browser app calls relative `/api` and `/uploads` paths. In local development, Vite proxies those paths to `VITE_API_BASE_URL`. On Vercel, `vercel.json` rewrites those paths to the deployed backend.
 
 ## Features
 
@@ -150,6 +152,5 @@ Use these settings on Vercel:
 - Framework Preset: `Vite`
 - Build Command: `npm run build`
 - Output Directory: `dist`
-- Environment Variable: `VITE_API_BASE_URL=https://ai-powered-blog-application-backend-1.onrender.com`
 
 The included `vercel.json` also rewrites `/api/*` and `/uploads/*` to the deployed backend and sends all other routes to `index.html` for Vue Router history mode.
