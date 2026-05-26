@@ -103,6 +103,18 @@ Authentication uses a JWT returned by the backend. The session is stored in `loc
 Authorization: Bearer <token>
 ```
 
+The frontend reads the backend origin from:
+
+```text
+VITE_API_BASE_URL
+```
+
+For local development, create a `.env` file:
+
+```text
+VITE_API_BASE_URL=https://ai-powered-blog-application-backend-1.onrender.com
+```
+
 ## Features
 
 - Signup and login
@@ -130,3 +142,14 @@ npm run preview
 ```
 
 Deploy the generated `dist/` directory to a static hosting provider. Configure the production host or reverse proxy so API and upload requests are forwarded to the backend service.
+
+## Vercel Deployment
+
+Use these settings on Vercel:
+
+- Framework Preset: `Vite`
+- Build Command: `npm run build`
+- Output Directory: `dist`
+- Environment Variable: `VITE_API_BASE_URL=https://ai-powered-blog-application-backend-1.onrender.com`
+
+The included `vercel.json` also rewrites `/api/*` and `/uploads/*` to the deployed backend and sends all other routes to `index.html` for Vue Router history mode.

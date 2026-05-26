@@ -46,7 +46,7 @@ export interface Analytics {
   popularBlog: Blog | null
 }
 
-const BASE_URL = '' // handled by dev server proxy locally
+const BASE_URL = import.meta.env.VITE_API_BASE_URL?.replace(/\/$/, '') || ''
 
 async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   const headers = new Headers(options.headers || {})
