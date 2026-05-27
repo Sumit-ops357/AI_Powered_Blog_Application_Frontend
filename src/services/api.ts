@@ -46,7 +46,43 @@ export interface Analytics {
   popularBlog: Blog | null
 }
 
-const BASE_URL = ''
+const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || '').replace(/\/$/, '')
+const LOCAL_UPLOAD_URL_PATTERN = /^http:\/\/localhost:8081(\/uploads\/.*)$/i
+
+export function resolveMediaUrl(url?: string) {
+  if (!url) return ''
+
+  const localUploadMatch = url.match(LOCAL_UPLOAD_URL_PATTERN)
+  if (localUploadMatch) {
+    return `${API_BASE_URL}${localUploadMatch[1]}`
+  }
+
+  if (url.startsWith('/uploads/')) {
+    return API_BASE_URL ? `${API_BASE_URL}${url}` : url
+  }
+
+  return url
+}
+
+function normalizeMediaUrls<T>(value: T): T {
+  if (Array.isArray(value)) {
+    return value.map(normalizeMediaUrls) as T
+  }
+
+  if (value && typeof value === 'object') {
+    const normalized = { ...(value as Record<string, unknown>) }
+    for (const key of ['imageUrl', 'avatarUrl']) {
+      if (typeof normalized[key] === 'string') {
+        normalized[key] = resolveMediaUrl(normalized[key])
+      }
+    }
+    return normalized as T
+  }
+
+  return value
+}
+
+const BASE_URL = API_BASE_URL
 
 async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   const headers = new Headers(options.headers || {})
@@ -90,7 +126,7 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
     return (await response.text()) as unknown as T
   }
 
-  return response.json()
+  return normalizeMediaUrls(await response.json())
 }
 
 export const api = {
