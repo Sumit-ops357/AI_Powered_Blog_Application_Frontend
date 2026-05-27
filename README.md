@@ -2,6 +2,8 @@
 
 Vue 3 + TypeScript frontend for a blog platform. The app provides public blog discovery, authenticated writing workflows, profile pages, comments, social actions, file uploads, dashboard analytics, and AI writing helpers.
 
+**Deployed Link: https://ai-powered-blog-application-fronten.vercel.app/**
+
 ## Tech Stack
 
 - Vue 3 with `<script setup>`
